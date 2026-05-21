@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Mnemoki — So'zni bir marta o'qi, bir umrga eslab qol</title>
+<title>Mnemoki — So'zni bir marta o'qi, umrlik esla</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
@@ -32,7 +32,6 @@
     overflow-x: hidden;
   }
 
-  /* ── NOISE TEXTURE OVERLAY ── */
   body::before {
     content: '';
     position: fixed;
@@ -43,7 +42,6 @@
     opacity: 0.4;
   }
 
-  /* ── NAV ── */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -78,10 +76,11 @@
     border-radius: 2px;
     text-decoration: none;
     transition: background 0.2s;
+    border: none;
+    cursor: pointer;
   }
   .nav-cta:hover { background: var(--gold-light); }
 
-  /* ── HERO ── */
   .hero {
     min-height: 100vh;
     display: flex;
@@ -94,7 +93,6 @@
     overflow: hidden;
   }
 
-  /* Radial glow behind hero */
   .hero::after {
     content: '';
     position: absolute;
@@ -144,6 +142,13 @@
     animation: fadeUp 0.9s 0.5s forwards;
   }
 
+  .hero-form-wrapper {
+    opacity: 0;
+    animation: fadeUp 0.9s 0.65s forwards;
+    position: relative;
+    z-index: 2;
+  }
+
   .hero-form {
     display: flex;
     gap: 0;
@@ -152,10 +157,6 @@
     border: 1px solid var(--gold);
     border-radius: 3px;
     overflow: hidden;
-    opacity: 0;
-    animation: fadeUp 0.9s 0.65s forwards;
-    position: relative;
-    z-index: 2;
   }
 
   .hero-form input {
@@ -186,6 +187,7 @@
     transition: background 0.2s;
   }
   .hero-form button:hover { background: var(--gold-light); }
+  .hero-form button:disabled { background: var(--gold); opacity: 0.6; cursor: not-allowed; }
 
   .hero-note {
     margin-top: 1rem;
@@ -197,7 +199,19 @@
 
   .hero-note span { color: var(--gold); }
 
-  /* floating card preview */
+  .success-msg {
+    display: none;
+    background: rgba(76, 175, 80, 0.1);
+    border: 1px solid #4caf50;
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: #4caf50;
+    text-align: center;
+    max-width: 460px;
+  }
+
   .hero-card-preview {
     margin-top: 5rem;
     display: flex;
@@ -227,7 +241,6 @@
   .pc-trans { font-size: 0.75rem; color: var(--gold); font-weight: 500; margin-bottom: 8px; }
   .pc-tag { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(245,240,232,0.35); }
 
-  /* ── DIVIDER ── */
   .divider {
     width: 100%;
     max-width: 900px;
@@ -236,7 +249,6 @@
     background: linear-gradient(90deg, transparent, var(--border), transparent);
   }
 
-  /* ── PROBLEM ── */
   .problem {
     padding: 7rem 2rem;
     max-width: 860px;
@@ -287,7 +299,6 @@
   .prob-head { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.4rem; color: var(--cream); }
   .prob-text { font-size: 0.82rem; color: rgba(245,240,232,0.45); line-height: 1.6; }
 
-  /* ── TOG METHOD ── */
   .method {
     padding: 7rem 2rem;
     background: rgba(255,255,255,0.02);
@@ -303,8 +314,6 @@
     gap: 5rem;
     align-items: center;
   }
-
-  .method-left {}
 
   .method-title {
     font-family: 'Playfair Display', serif;
@@ -345,7 +354,6 @@
   .tog-step-head { font-size: 1rem; font-weight: 500; margin-bottom: 0.3rem; }
   .tog-step-desc { font-size: 0.82rem; color: rgba(245,240,232,0.45); line-height: 1.6; }
 
-  /* live card demo on right */
   .method-card {
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--border);
@@ -407,7 +415,6 @@
     color: rgba(245,240,232,0.25);
   }
 
-  /* ── SOCIAL PROOF ── */
   .proof {
     padding: 7rem 2rem;
     max-width: 900px;
@@ -462,7 +469,6 @@
   }
   .stat-label { font-size: 0.78rem; color: rgba(245,240,232,0.45); margin-top: 2px; }
 
-  /* ── CTA SECTION ── */
   .cta-section {
     padding: 8rem 2rem;
     text-align: center;
@@ -509,6 +515,11 @@
     line-height: 1.7;
   }
 
+  .cta-form-wrapper {
+    position: relative;
+    z-index: 2;
+  }
+
   .cta-form {
     display: flex;
     flex-direction: column;
@@ -516,8 +527,6 @@
     gap: 0.8rem;
     max-width: 420px;
     margin: 0 auto;
-    position: relative;
-    z-index: 2;
   }
 
   .cta-input-row {
@@ -556,6 +565,7 @@
     transition: background 0.2s;
   }
   .cta-input-row button:hover { background: var(--gold-light); }
+  .cta-input-row button:disabled { background: var(--gold); opacity: 0.6; cursor: not-allowed; }
 
   .cta-badges {
     display: flex;
@@ -574,7 +584,6 @@
   }
   .cta-badge::before { content: '✓'; color: var(--gold); }
 
-  /* ── FOOTER ── */
   footer {
     padding: 2.5rem 3rem;
     border-top: 1px solid var(--border);
@@ -595,20 +604,6 @@
 
   .footer-note { font-size: 0.78rem; color: rgba(245,240,232,0.3); }
 
-  /* ── SUCCESS STATE ── */
-  .success-msg {
-    display: none;
-    background: rgba(201,168,76,0.1);
-    border: 1px solid var(--gold);
-    border-radius: 4px;
-    padding: 1rem 1.5rem;
-    font-size: 0.88rem;
-    color: var(--gold);
-    text-align: center;
-    width: 100%;
-  }
-
-  /* ── ANIMATIONS ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(24px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -621,7 +616,6 @@
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     nav { padding: 1rem 1.5rem; }
     .method-inner { grid-template-columns: 1fr; gap: 3rem; }
@@ -633,36 +627,36 @@
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-logo">Mnem<span>o</span>ki</div>
   <a href="#signup" class="nav-cta">Bepul boshlash</a>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <p class="hero-eyebrow">🧠 TOG Usuli · Ingliz–O'zbek · Har kuni 1 so'z</p>
   <h1 class="hero-title">
     So'zni bir marta o'qi,<br/>
-    <em>bir umrga</em> eslab qol
+    <em>umrlik</em> esla
   </h1>
   <p class="hero-sub">
     Miya tasvirni eslab qoladi — so'zni emas.<br/>
     Mnemoki shu tamoyil asosida ishlaydi: har bir so'z 
-    siz biladigan o'zbekcha obraz orqali miyangizga joylashadi.
+    siz biladigan o'zbekcha obraz orqali miyangizga yopishadi.
   </p>
 
-  <div class="hero-form" id="hero-form-wrap">
-    <input type="email" placeholder="Email manzilingiz..." id="hero-email"/>
-    <button onclick="handleSignup('hero')">Bepul kirish →</button>
+  <div class="hero-form-wrapper">
+    <form class="hero-form" id="hero-form" action="https://formspree.io/f/xdajevkr" method="POST">
+      <input type="email" name="email" placeholder="Email manzilingiz..." required/>
+      <button type="submit" id="hero-btn">Bepul kirish →</button>
+    </form>
+    <div class="success-msg" id="hero-success">
+      ✓ Tabriklaymiz! Siz ro'yxatga olindingiz. Tez orada aloqaga chiqamiz.
+    </div>
+    <p class="hero-note">
+      <span>100 ta bepul joy</span> — hozir faqat 
+      <span id="spots-left">87</span> ta qoldi
+    </p>
   </div>
-  <div class="success-msg" id="hero-success">
-    ✓ Siz ro'yxatga olindingiz! Tez orada aloqaga chiqamiz.
-  </div>
-  <p class="hero-note">
-    <span>100 ta bepul joy</span> — hozir faqat 
-    <span id="spots-left">87</span> ta qoldi
-  </p>
 
   <div class="hero-card-preview">
     <div class="preview-card">
@@ -685,7 +679,6 @@
 
 <div class="divider"></div>
 
-<!-- PROBLEM -->
 <section class="problem">
   <p class="section-label reveal">Muammo nima?</p>
   <h2 class="problem-title reveal">
@@ -696,13 +689,13 @@
   <div class="problem-grid reveal">
     <div class="prob-item">
       <div class="prob-icon">📖</div>
-      <div class="prob-head">Kitobdan o'qiysiz</div>
-      <div class="prob-text">Yuzlab so'z yozasiz. Hafta o'tib — hammasi esdan chiqadi.</div>
+      <div class="prob-head">Kitobdan o'rganasiz</div>
+      <div class="prob-text">Yuzlab so'z yozasiz. Hafta o'tib — hammasi xira bo'ladi.</div>
     </div>
     <div class="prob-item">
       <div class="prob-icon">🔁</div>
       <div class="prob-head">Qayta-qayta takrorlaysiz</div>
-      <div class="prob-text">Flashcard, Duolingo, Anki... Lekin miya mexanik takrorlashga moslashmagan.</div>
+      <div class="prob-text">Flashcard, Duolingo, Anki... lekin miya mexanik takrorni sevar emas.</div>
     </div>
     <div class="prob-item">
       <div class="prob-icon">😔</div>
@@ -714,14 +707,13 @@
 
 <div class="divider"></div>
 
-<!-- METHOD -->
 <section class="method">
   <div class="method-inner">
     <div class="method-left reveal">
       <p class="section-label">Yechim</p>
       <h2 class="method-title">TOG Usuli —<br/>miyaning o'z tili</h2>
       <p class="method-desc">
-        Ilm-fanda isbotlangan: miya mavhum so'zlarni emas, 
+        Ilm-fan isbotlagan: miya mavhum so'zlarni emas, 
         <strong>hikoya va tasvirlarni</strong> eslab qoladi. 
         TOG usuli shu qonunga asoslangan.
       </p>
@@ -731,21 +723,21 @@
           <div class="tog-letter-big">T</div>
           <div class="tog-step-content">
             <div class="tog-step-head">Tarjima</div>
-            <div class="tog-step-desc">So'zning o'zbekchadagi ma'nosi. Aniq, qisqa.</div>
+            <div class="tog-step-desc">So'zning o'zbek ma'nosi. Aniq, qisqa.</div>
           </div>
         </div>
         <div class="tog-step">
           <div class="tog-letter-big">O</div>
           <div class="tog-step-content">
             <div class="tog-step-head">Obraz</div>
-            <div class="tog-step-desc">Ingliz so'ziga o'xshagan tanish o'zbekcha so'z topiladi — quloqqa tanish bo'ladi.</div>
+            <div class="tog-step-desc">Ingliz so'ziga o'xshagan tanish o'zbekcha so'z topiladi — quloqqa ilashib qoladi.</div>
           </div>
         </div>
         <div class="tog-step">
           <div class="tog-letter-big">G</div>
           <div class="tog-step-content">
             <div class="tog-step-head">Gormonizatsiya</div>
-            <div class="tog-step-desc">Obraz orqali kichik hikoya — bir marta o'qib, tasavvur qilasiz va bir umrga eslab qolasiz.</div>
+            <div class="tog-step-desc">Obraz orqali kichik hikoya — bir marta o'qib, umrlik eslab qolasiz.</div>
           </div>
         </div>
       </div>
@@ -786,7 +778,6 @@
 
 <div class="divider"></div>
 
-<!-- SOCIAL PROOF -->
 <section class="proof">
   <p class="section-label reveal">Dastlabki foydalanuvchilar</p>
   <h2 class="proof-title reveal">Sinab ko'rganlar nima deydi?</h2>
@@ -794,19 +785,19 @@
   <div class="proof-grid reveal">
     <div class="proof-card">
       <div class="proof-stars">★★★★★</div>
-      <p class="proof-text">"Humble so'zini ko'rganimda 'ham bo'l' deb o'qidim — shu zahoti esimda qoldi. Ertasi kuni ham esimda edi. Bu mo'jiza!"</p>
+      <p class="proof-text">"Humble so'zini ko'rganimda 'ham bo'l' deb o'qidim — shu zahoti esimga yopishib qoldi. Ertasi kuni ham esimda edi. Bu mo'jiza!"</p>
       <div class="proof-name">Dilnoza T.</div>
       <div class="proof-role">Talaba, TATU</div>
     </div>
     <div class="proof-card">
       <div class="proof-stars">★★★★★</div>
-      <p class="proof-text">"Avval Duolingo ishlatardim — 3 oyda 50ta so'z esimda qolardi. Mnemoki bilan bir haftada 20ta so'z — va barchasi esimda!"</p>
+      <p class="proof-text">"Avval Duolingo ishlatardim — 3 oyda 50 so'z esimda qoldi. Mnemoki bilan bir haftada 20 so'z — va barchasi esimda!"</p>
       <div class="proof-name">Jasur M.</div>
       <div class="proof-role">Dasturchi, Toshkent</div>
     </div>
     <div class="proof-card">
       <div class="proof-stars">★★★★★</div>
-      <p class="proof-text">"Bolam IELTS tayyorgarligida shu usulni ishlatyapti. Ikki haftalik natijadan juda xursandmiz. Tavsiya qilaman!"</p>
+      <p class="proof-text">"Bolam IELTS tayyorgarligida shu usulni ishlatyapti. Ikki haftada ko'rgan farqidan xursandmiz. Tavsiya qilaman!"</p>
       <div class="proof-name">Nasiba X.</div>
       <div class="proof-role">Ona, Samarqand</div>
     </div>
@@ -822,7 +813,7 @@
       <span class="stat-label">O'qisangiz yetarli</span>
     </div>
     <div class="stat-item">
-      <span class="stat-num">0 $</span>
+      <span class="stat-num">0 ₽</span>
       <span class="stat-label">Birinchi oy bepul</span>
     </div>
   </div>
@@ -830,22 +821,23 @@
 
 <div class="divider"></div>
 
-<!-- FINAL CTA -->
 <section class="cta-section" id="signup">
   <p class="cta-eyebrow">Cheklangan imkon</p>
   <h2 class="cta-title">
     Birinchi <em>100</em> nafar<br/>uchun bepul
   </h2>
   <p class="cta-sub">
-    Hoziroq ro'yxatdan o'ting — to'lov yo'q, karta yo'q. 
+    Hozir ro'yxatdan o'ting — to'lov yo'q, karta yo'q. 
     Faqat email manzil kifoya. Biz siz bilan bog'lanamiz.
   </p>
 
-  <div class="cta-form">
-    <div class="cta-input-row">
-      <input type="email" placeholder="Email manzilingiz..." id="cta-email"/>
-      <button onclick="handleSignup('cta')">Bepul kirish →</button>
-    </div>
+  <div class="cta-form-wrapper">
+    <form class="cta-form" action="https://formspree.io/f/xdajevkr" method="POST">
+      <div class="cta-input-row">
+        <input type="email" name="email" placeholder="Email manzilingiz..." required/>
+        <button type="submit" id="cta-btn">Bepul kirish →</button>
+      </div>
+    </form>
     <div class="success-msg" id="cta-success">
       ✓ Tabriklaymiz! Siz ro'yxatga olindingiz.
     </div>
@@ -857,10 +849,9 @@
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-logo">Mnem<span>o</span>ki</div>
-  <div class="footer-note">© 2026 Mnemoki · TOG Usuli · Ingliz–O'zbek</div>
+  <div class="footer-note">© 2025 Mnemoki · TOG Usuli · Ingliz–O'zbek</div>
 </footer>
 
 <script>
@@ -876,42 +867,65 @@
   }, { threshold: 0.12 });
   reveals.forEach(r => observer.observe(r));
 
-  // Signup handler
-  function handleSignup(source) {
-    const input = document.getElementById(source === 'hero' ? 'hero-email' : 'cta-email');
-    const email = input.value.trim();
-
-    if (!email || !email.includes('@')) {
-      input.style.borderBottom = '2px solid #c9a84c';
-      input.placeholder = 'Email manzil kiriting...';
-      input.focus();
-      return;
-    }
-
-    // Hide form, show success
-    if (source === 'hero') {
-      document.getElementById('hero-form-wrap').style.display = 'none';
-      document.getElementById('hero-success').style.display = 'block';
-    } else {
-      document.querySelector('.cta-input-row').style.display = 'none';
-      document.getElementById('cta-success').style.display = 'block';
-    }
-
-    // Decrease spots
-    const el = document.getElementById('spots-left');
-    if (el) {
-      const cur = parseInt(el.textContent);
-      if (cur > 1) el.textContent = cur - 1;
-    }
-  }
-
-  // Allow Enter key
-  document.querySelectorAll('input[type=email]').forEach(inp => {
-    inp.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        const src = inp.id === 'hero-email' ? 'hero' : 'cta';
-        handleSignup(src);
+  // Form submission handlers
+  document.getElementById('hero-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('hero-btn');
+    btn.disabled = true;
+    btn.textContent = 'Yuborilmoqda...';
+    
+    fetch(this.action, {
+      method: 'POST',
+      body: new FormData(this),
+      headers: {
+        'Accept': 'application/json'
       }
+    }).then(response => {
+      if (response.ok) {
+        document.getElementById('hero-form').style.display = 'none';
+        document.getElementById('hero-success').style.display = 'block';
+        
+        const spotEl = document.getElementById('spots-left');
+        const cur = parseInt(spotEl.textContent);
+        if (cur > 1) spotEl.textContent = cur - 1;
+      } else {
+        alert('Xato! Qaytadan urinib ko\'ring.');
+        btn.disabled = false;
+        btn.textContent = 'Bepul kirish →';
+      }
+    }).catch(error => {
+      alert('Xato! Qaytadan urinib ko\'ring.');
+      btn.disabled = false;
+      btn.textContent = 'Bepul kirish →';
+    });
+  });
+
+  // CTA form submission
+  document.querySelector('.cta-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('button');
+    btn.disabled = true;
+    btn.textContent = 'Yuborilmoqda...';
+    
+    fetch(this.action, {
+      method: 'POST',
+      body: new FormData(this),
+      headers: {
+        'Accept': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        document.querySelector('.cta-form').style.display = 'none';
+        document.getElementById('cta-success').style.display = 'block';
+      } else {
+        alert('Xato! Qaytadan urinib ko\'ring.');
+        btn.disabled = false;
+        btn.textContent = 'Bepul kirish →';
+      }
+    }).catch(error => {
+      alert('Xato! Qaytadan urinib ko\'ring.');
+      btn.disabled = false;
+      btn.textContent = 'Bepul kirish →';
     });
   });
 </script>
