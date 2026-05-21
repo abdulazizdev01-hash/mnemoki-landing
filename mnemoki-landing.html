@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mnemoki — So'zni bir marta o'qi, bir umrga eslab qol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --cream: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #e8d5a3;
+    --purple: #2d1b69;
+    --purple-mid: #4a2fa0;
+    --purple-light: #7c5cbf;
+    --white: #ffffff;
+    --gray: #888;
+    --border: rgba(201,168,76,0.25);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--ink);
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.4rem 3rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(13,13,13,0.85);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--cream);
+  }
+
+  .nav-logo span { color: var(--gold); }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--ink);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.6rem 1.4rem;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold-light); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Radial glow behind hero */
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(ellipse, rgba(74,47,160,0.35) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 900;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    max-width: 900px;
+    margin-bottom: 1.8rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.35s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-weight: 300;
+    color: rgba(245,240,232,0.65);
+    max-width: 540px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.5s forwards;
+  }
+
+  .hero-form {
+    display: flex;
+    gap: 0;
+    max-width: 460px;
+    width: 100%;
+    border: 1px solid var(--gold);
+    border-radius: 3px;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.65s forwards;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-form input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: none;
+    padding: 1rem 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--cream);
+    outline: none;
+  }
+
+  .hero-form input::placeholder { color: rgba(245,240,232,0.35); }
+
+  .hero-form button {
+    background: var(--gold);
+    border: none;
+    padding: 1rem 1.6rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .hero-form button:hover { background: var(--gold-light); }
+
+  .hero-note {
+    margin-top: 1rem;
+    font-size: 0.78rem;
+    color: rgba(245,240,232,0.35);
+    opacity: 0;
+    animation: fadeUp 0.9s 0.8s forwards;
+  }
+
+  .hero-note span { color: var(--gold); }
+
+  /* floating card preview */
+  .hero-card-preview {
+    margin-top: 5rem;
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 1s 1s forwards;
+    position: relative;
+    z-index: 2;
+  }
+
+  .preview-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    width: 170px;
+    text-align: left;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .preview-card:hover { transform: translateY(-6px); border-color: var(--gold); }
+  .preview-card:nth-child(2) { transform: translateY(-12px); }
+  .preview-card:nth-child(2):hover { transform: translateY(-18px); }
+
+  .pc-word { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--cream); margin-bottom: 4px; }
+  .pc-trans { font-size: 0.75rem; color: var(--gold); font-weight: 500; margin-bottom: 8px; }
+  .pc-tag { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(245,240,232,0.35); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  /* ── PROBLEM ── */
+  .problem {
+    padding: 7rem 2rem;
+    max-width: 860px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+
+  .problem-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 2rem;
+  }
+
+  .problem-title em { font-style: italic; color: rgba(245,240,232,0.4); }
+
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 3rem;
+  }
+
+  .prob-item {
+    padding: 2rem 1.5rem;
+    background: rgba(255,255,255,0.02);
+    text-align: left;
+    border-right: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .prob-item:last-child { border-right: none; }
+  .prob-item:hover { background: rgba(255,255,255,0.04); }
+
+  .prob-icon { font-size: 1.6rem; margin-bottom: 0.8rem; }
+  .prob-head { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.4rem; color: var(--cream); }
+  .prob-text { font-size: 0.82rem; color: rgba(245,240,232,0.45); line-height: 1.6; }
+
+  /* ── TOG METHOD ── */
+  .method {
+    padding: 7rem 2rem;
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .method-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .method-left {}
+
+  .method-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+
+  .method-desc {
+    font-size: 0.95rem;
+    color: rgba(245,240,232,0.55);
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+  }
+
+  .tog-steps { display: flex; flex-direction: column; gap: 0; }
+
+  .tog-step {
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tog-step:last-child { border-bottom: none; }
+
+  .tog-letter-big {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    min-width: 44px;
+  }
+
+  .tog-step-content {}
+  .tog-step-head { font-size: 1rem; font-weight: 500; margin-bottom: 0.3rem; }
+  .tog-step-desc { font-size: 0.82rem; color: rgba(245,240,232,0.45); line-height: 1.6; }
+
+  /* live card demo on right */
+  .method-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .mc-top {
+    height: 160px;
+    background: linear-gradient(135deg, #1a0533 0%, #2d1b69 50%, #1a0533 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mc-top::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 130px; height: 130px;
+    background: radial-gradient(circle, rgba(201,168,76,0.2) 0%, transparent 70%);
+  }
+
+  .mc-tag { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(201,168,76,0.7); margin-bottom: 4px; }
+  .mc-word { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; color: #fff; line-height: 1; }
+  .mc-pron { font-size: 0.78rem; color: rgba(255,255,255,0.45); font-style: italic; margin-top: 3px; }
+
+  .mc-bottom { padding: 1.3rem; }
+
+  .mc-trans { font-size: 1.1rem; font-weight: 500; color: var(--cream); margin-bottom: 1rem; }
+
+  .mc-tog { display: flex; flex-direction: column; gap: 0.6rem; }
+
+  .mc-tog-row { display: flex; gap: 8px; align-items: flex-start; }
+
+  .mc-tog-l {
+    min-width: 22px; height: 22px;
+    border-radius: 5px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500; color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .mc-tog-text { font-size: 0.8rem; color: rgba(245,240,232,0.6); line-height: 1.5; }
+  .mc-tog-text strong { color: var(--cream); font-weight: 500; }
+
+  .mc-footer {
+    padding: 0.8rem 1.3rem;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.25);
+  }
+
+  /* ── SOCIAL PROOF ── */
+  .proof {
+    padding: 7rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .proof-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    margin-bottom: 3rem;
+  }
+
+  .proof-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-bottom: 4rem;
+  }
+
+  .proof-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: left;
+    transition: border-color 0.2s;
+  }
+  .proof-card:hover { border-color: var(--gold); }
+
+  .proof-stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 0.8rem; letter-spacing: 2px; }
+  .proof-text { font-size: 0.88rem; color: rgba(245,240,232,0.65); line-height: 1.65; margin-bottom: 1rem; font-style: italic; }
+  .proof-name { font-size: 0.78rem; font-weight: 500; color: var(--cream); }
+  .proof-role { font-size: 0.72rem; color: rgba(245,240,232,0.35); }
+
+  .stats-row {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-label { font-size: 0.78rem; color: rgba(245,240,232,0.45); margin-top: 2px; }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    padding: 8rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(74,47,160,0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    max-width: 700px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .cta-title em { font-style: italic; color: var(--gold); }
+
+  .cta-sub {
+    font-size: 1rem;
+    color: rgba(245,240,232,0.5);
+    max-width: 440px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+
+  .cta-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    max-width: 420px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta-input-row {
+    display: flex;
+    width: 100%;
+    border: 1px solid var(--gold);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .cta-input-row input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: none;
+    padding: 1rem 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--cream);
+    outline: none;
+  }
+
+  .cta-input-row input::placeholder { color: rgba(245,240,232,0.3); }
+
+  .cta-input-row button {
+    background: var(--gold);
+    border: none;
+    padding: 1rem 1.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .cta-input-row button:hover { background: var(--gold-light); }
+
+  .cta-badges {
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  .cta-badge {
+    font-size: 0.73rem;
+    color: rgba(245,240,232,0.4);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .cta-badge::before { content: '✓'; color: var(--gold); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 2.5rem 3rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--cream);
+  }
+  .footer-logo span { color: var(--gold); }
+
+  .footer-note { font-size: 0.78rem; color: rgba(245,240,232,0.3); }
+
+  /* ── SUCCESS STATE ── */
+  .success-msg {
+    display: none;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    padding: 1rem 1.5rem;
+    font-size: 0.88rem;
+    color: var(--gold);
+    text-align: center;
+    width: 100%;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .method-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .prob-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .prob-item:last-child { border-bottom: none; }
+    footer { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Mnem<span>o</span>ki</div>
+  <a href="#signup" class="nav-cta">Bepul boshlash</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">🧠 TOG Usuli · Ingliz–O'zbek · Har kuni 1 so'z</p>
+  <h1 class="hero-title">
+    So'zni bir marta o'qi,<br/>
+    <em>bir umrga</em> eslab qol
+  </h1>
+  <p class="hero-sub">
+    Miya tasvirni eslab qoladi — so'zni emas.<br/>
+    Mnemoki shu tamoyil asosida ishlaydi: har bir so'z 
+    siz biladigan o'zbekcha obraz orqali miyangizga joylashadi.
+  </p>
+
+  <div class="hero-form" id="hero-form-wrap">
+    <input type="email" placeholder="Email manzilingiz..." id="hero-email"/>
+    <button onclick="handleSignup('hero')">Bepul kirish →</button>
+  </div>
+  <div class="success-msg" id="hero-success">
+    ✓ Siz ro'yxatga olindingiz! Tez orada aloqaga chiqamiz.
+  </div>
+  <p class="hero-note">
+    <span>100 ta bepul joy</span> — hozir faqat 
+    <span id="spots-left">87</span> ta qoldi
+  </p>
+
+  <div class="hero-card-preview">
+    <div class="preview-card">
+      <div class="pc-word">Brave</div>
+      <div class="pc-trans">Jasur, mard</div>
+      <div class="pc-tag">Bo'ron + ov</div>
+    </div>
+    <div class="preview-card">
+      <div class="pc-word">Humble</div>
+      <div class="pc-trans">Kamtar</div>
+      <div class="pc-tag">Ham + bol</div>
+    </div>
+    <div class="preview-card">
+      <div class="pc-word">Trust</div>
+      <div class="pc-trans">Ishonch</div>
+      <div class="pc-tag">Tor + ust</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <p class="section-label reveal">Muammo nima?</p>
+  <h2 class="problem-title reveal">
+    Lug'at yozsangiz ham,<br/>
+    <em>ertasi kuni esdan chiqadi.</em>
+  </h2>
+
+  <div class="problem-grid reveal">
+    <div class="prob-item">
+      <div class="prob-icon">📖</div>
+      <div class="prob-head">Kitobdan o'qiysiz</div>
+      <div class="prob-text">Yuzlab so'z yozasiz. Hafta o'tib — hammasi esdan chiqadi.</div>
+    </div>
+    <div class="prob-item">
+      <div class="prob-icon">🔁</div>
+      <div class="prob-head">Qayta-qayta takrorlaysiz</div>
+      <div class="prob-text">Flashcard, Duolingo, Anki... Lekin miya mexanik takrorlashga moslashmagan.</div>
+    </div>
+    <div class="prob-item">
+      <div class="prob-icon">😔</div>
+      <div class="prob-head">Vaqt ketadi, natija yo'q</div>
+      <div class="prob-text">Oylar o'tadi. Hali ham "What is your name?" dan nariroq bora olmaysiz.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- METHOD -->
+<section class="method">
+  <div class="method-inner">
+    <div class="method-left reveal">
+      <p class="section-label">Yechim</p>
+      <h2 class="method-title">TOG Usuli —<br/>miyaning o'z tili</h2>
+      <p class="method-desc">
+        Ilm-fanda isbotlangan: miya mavhum so'zlarni emas, 
+        <strong>hikoya va tasvirlarni</strong> eslab qoladi. 
+        TOG usuli shu qonunga asoslangan.
+      </p>
+
+      <div class="tog-steps">
+        <div class="tog-step">
+          <div class="tog-letter-big">T</div>
+          <div class="tog-step-content">
+            <div class="tog-step-head">Tarjima</div>
+            <div class="tog-step-desc">So'zning o'zbekchadagi ma'nosi. Aniq, qisqa.</div>
+          </div>
+        </div>
+        <div class="tog-step">
+          <div class="tog-letter-big">O</div>
+          <div class="tog-step-content">
+            <div class="tog-step-head">Obraz</div>
+            <div class="tog-step-desc">Ingliz so'ziga o'xshagan tanish o'zbekcha so'z topiladi — quloqqa tanish bo'ladi.</div>
+          </div>
+        </div>
+        <div class="tog-step">
+          <div class="tog-letter-big">G</div>
+          <div class="tog-step-content">
+            <div class="tog-step-head">Gormonizatsiya</div>
+            <div class="tog-step-desc">Obraz orqali kichik hikoya — bir marta o'qib, tasavvur qilasiz va bir umrga eslab qolasiz.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="method-card">
+        <div class="mc-top">
+          <div class="mc-tag">Bugungi so'z</div>
+          <div class="mc-word">Humble</div>
+          <div class="mc-pron">/ˈhʌm.bəl/</div>
+        </div>
+        <div class="mc-bottom">
+          <div class="mc-trans">Kamtar, tavozeli 🌾</div>
+          <div class="mc-tog">
+            <div class="mc-tog-row">
+              <div class="mc-tog-l">T</div>
+              <div class="mc-tog-text">Kamtar, tavozeli, o'zini past tutuvchi</div>
+            </div>
+            <div class="mc-tog-row">
+              <div class="mc-tog-l">O</div>
+              <div class="mc-tog-text"><strong>Ham + bol</strong> — "hʌm-bəl" → hammaga ham bo'l deydi</div>
+            </div>
+            <div class="mc-tog-row">
+              <div class="mc-tog-l">G</div>
+              <div class="mc-tog-text">G'alla boshoqlari to'lganda bosh egadi — bo'sh boshoqlar esa tik turadi. Kamtar odam ham shunday.</div>
+            </div>
+          </div>
+        </div>
+        <div class="mc-footer">
+          <span>MNEMOKI</span>
+          <span>Kun #12</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SOCIAL PROOF -->
+<section class="proof">
+  <p class="section-label reveal">Dastlabki foydalanuvchilar</p>
+  <h2 class="proof-title reveal">Sinab ko'rganlar nima deydi?</h2>
+
+  <div class="proof-grid reveal">
+    <div class="proof-card">
+      <div class="proof-stars">★★★★★</div>
+      <p class="proof-text">"Humble so'zini ko'rganimda 'ham bo'l' deb o'qidim — shu zahoti esimda qoldi. Ertasi kuni ham esimda edi. Bu mo'jiza!"</p>
+      <div class="proof-name">Dilnoza T.</div>
+      <div class="proof-role">Talaba, TATU</div>
+    </div>
+    <div class="proof-card">
+      <div class="proof-stars">★★★★★</div>
+      <p class="proof-text">"Avval Duolingo ishlatardim — 3 oyda 50ta so'z esimda qolardi. Mnemoki bilan bir haftada 20ta so'z — va barchasi esimda!"</p>
+      <div class="proof-name">Jasur M.</div>
+      <div class="proof-role">Dasturchi, Toshkent</div>
+    </div>
+    <div class="proof-card">
+      <div class="proof-stars">★★★★★</div>
+      <p class="proof-text">"Bolam IELTS tayyorgarligida shu usulni ishlatyapti. Ikki haftalik natijadan juda xursandmiz. Tavsiya qilaman!"</p>
+      <div class="proof-name">Nasiba X.</div>
+      <div class="proof-role">Ona, Samarqand</div>
+    </div>
+  </div>
+
+  <div class="stats-row reveal">
+    <div class="stat-item">
+      <span class="stat-num">30+</span>
+      <span class="stat-label">So'z kartasi tayyor</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">1×</span>
+      <span class="stat-label">O'qisangiz yetarli</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">0 $</span>
+      <span class="stat-label">Birinchi oy bepul</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FINAL CTA -->
+<section class="cta-section" id="signup">
+  <p class="cta-eyebrow">Cheklangan imkon</p>
+  <h2 class="cta-title">
+    Birinchi <em>100</em> nafar<br/>uchun bepul
+  </h2>
+  <p class="cta-sub">
+    Hoziroq ro'yxatdan o'ting — to'lov yo'q, karta yo'q. 
+    Faqat email manzil kifoya. Biz siz bilan bog'lanamiz.
+  </p>
+
+  <div class="cta-form">
+    <div class="cta-input-row">
+      <input type="email" placeholder="Email manzilingiz..." id="cta-email"/>
+      <button onclick="handleSignup('cta')">Bepul kirish →</button>
+    </div>
+    <div class="success-msg" id="cta-success">
+      ✓ Tabriklaymiz! Siz ro'yxatga olindingiz.
+    </div>
+    <div class="cta-badges">
+      <span class="cta-badge">Kredit karta shart emas</span>
+      <span class="cta-badge">Istalgan vaqt bekor qilish</span>
+      <span class="cta-badge">Har kuni 1 so'z</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Mnem<span>o</span>ki</div>
+  <div class="footer-note">© 2026 Mnemoki · TOG Usuli · Ingliz–O'zbek</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Signup handler
+  function handleSignup(source) {
+    const input = document.getElementById(source === 'hero' ? 'hero-email' : 'cta-email');
+    const email = input.value.trim();
+
+    if (!email || !email.includes('@')) {
+      input.style.borderBottom = '2px solid #c9a84c';
+      input.placeholder = 'Email manzil kiriting...';
+      input.focus();
+      return;
+    }
+
+    // Hide form, show success
+    if (source === 'hero') {
+      document.getElementById('hero-form-wrap').style.display = 'none';
+      document.getElementById('hero-success').style.display = 'block';
+    } else {
+      document.querySelector('.cta-input-row').style.display = 'none';
+      document.getElementById('cta-success').style.display = 'block';
+    }
+
+    // Decrease spots
+    const el = document.getElementById('spots-left');
+    if (el) {
+      const cur = parseInt(el.textContent);
+      if (cur > 1) el.textContent = cur - 1;
+    }
+  }
+
+  // Allow Enter key
+  document.querySelectorAll('input[type=email]').forEach(inp => {
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const src = inp.id === 'hero-email' ? 'hero' : 'cta';
+        handleSignup(src);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
